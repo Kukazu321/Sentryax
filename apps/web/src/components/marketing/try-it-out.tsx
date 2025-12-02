@@ -23,27 +23,28 @@ export function TryItOut() {
   ];
 
   return (
-    <section className="pt-2 pb-8 px-6">
+    <section className="pt-2 pb-8 px-4 sm:px-6">
       <div className="max-w-2xl mx-auto">
         {/* Email Input Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2">
-          <div className="flex items-center gap-2">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2 sm:p-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <input
               type="email"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="Enter your email..."
-              className="flex-1 px-4 py-3 text-gray-900 placeholder-gray-400 bg-transparent outline-none text-sm"
+              className="flex-1 px-4 py-3 text-gray-900 placeholder-gray-400 bg-transparent outline-none text-sm min-w-0"
             />
-            <button className="inline-flex items-center gap-2 px-5 py-3 text-sm font-medium text-white btn-gradient rounded-xl whitespace-nowrap">
+            <button className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-medium text-white btn-gradient rounded-xl whitespace-nowrap">
               <Lock className="w-3.5 h-3.5" />
-              Request Beta Access
+              <span className="hidden xs:inline">Request Beta Access</span>
+              <span className="xs:hidden">Join Beta</span>
             </button>
           </div>
         </div>
 
         {/* Liquid Glass Bubble */}
-        <div className="mt-16 flex justify-center">
+        <div className="mt-10 sm:mt-16 flex justify-center">
           <div 
             className="relative flex items-center gap-3 px-6 py-2 rounded-full"
             style={{
