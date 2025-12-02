@@ -1,10 +1,18 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { useState, useRef, ReactNode } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { Search, Bell, TrendingDown, ArrowRight, Zap } from 'lucide-react';
 
-const steps = [
+interface Step {
+  id: string;
+  tag: string;
+  title: string;
+  description: string;
+  visual: ReactNode;
+}
+
+const steps: Step[] = [
   {
     id: 'track',
     tag: 'Monitoring',
