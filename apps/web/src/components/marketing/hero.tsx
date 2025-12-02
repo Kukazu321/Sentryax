@@ -11,15 +11,15 @@ export function Hero() {
         </div>
 
         {/* Heading */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-gray-900 leading-[1.15] sm:leading-tight tracking-tight">
-          Total Competitor
+        <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-gray-900 leading-[1.15] sm:leading-tight tracking-tight">
+          Stop losing sales to competitors
           <br />
-          Surveillance
+          you don&apos;t even see.
         </h1>
 
         {/* Subheading */}
-        <p className="mt-3 sm:mt-6 text-sm sm:text-lg text-gray-600 max-w-xl mx-auto leading-relaxed px-2 sm:px-0">
-          Stop flying blind. Track your competitors' Ads, SEO, pricing, and product updates in real-time. Sentryax gives you the unfair advantage to dominate your market.
+        <p className="mt-3 sm:mt-6 text-sm sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed px-2 sm:px-0">
+          Every single day, your competitors roll out new products, slash prices, launch aggressive campaigns, and move in ways you never even get to see. We make sure that never happens to you again.
         </p>
 
       </div>

@@ -71,7 +71,22 @@ export function TryItOut() {
     if (showContactModal) {
       updateModalPosition();
       window.addEventListener('resize', updateModalPosition);
-      return () => window.removeEventListener('resize', updateModalPosition);
+      
+      // Close modal when clicking outside
+      const handleClickOutside = (e: MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(e.target as Node) &&
+            mailIconRef.current && !mailIconRef.current.contains(e.target as Node)) {
+          setShowContactModal(false);
+          setActiveTab(null);
+        }
+      };
+      
+      document.addEventListener('mousedown', handleClickOutside);
+      
+      return () => {
+        window.removeEventListener('resize', updateModalPosition);
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
     }
   }, [showContactModal, updateModalPosition]);
 
