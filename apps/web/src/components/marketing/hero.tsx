@@ -1,7 +1,7 @@
 
 export function Hero() {
   return (
-    <section className="relative pt-4 sm:pt-12 md:pt-16 pb-4 sm:pb-12">
+    <section className="relative pt-6 sm:pt-12 md:pt-16 pb-6 sm:pb-12">
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-lg bg-orange-100/40 border border-orange-200/30 mb-4 sm:mb-8">
@@ -23,7 +23,7 @@ export function Hero() {
         </h1>
 
         {/* Subheading - Mobile */}
-        <p className="sm:hidden mt-3 text-sm text-gray-600 leading-relaxed px-4">
+        <p className="sm:hidden mt-4 text-sm text-gray-600 leading-relaxed px-2">
           Your competitors move fast. We make sure you see everything they do.
         </p>
         
