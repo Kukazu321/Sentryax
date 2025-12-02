@@ -1,11 +1,47 @@
 'use client';
 
 import { useState } from 'react';
-import { Lock, Instagram, Mail, FileText } from 'lucide-react';
+import { Lock, Instagram, Mail, FileText, Loader2, Check } from 'lucide-react';
 
 export function TryItOut() {
-  const [url, setUrl] = useState('');
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState('mail');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !email.includes('@')) {
+      setStatus('error');
+      setMessage('Please enter a valid email');
+      return;
+    }
+
+    setStatus('loading');
+
+    try {
+      const response = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus('success');
+        setMessage(data.message || "You're on the list!");
+        setEmail('');
+      } else {
+        setStatus('error');
+        setMessage(data.error || 'Something went wrong');
+      }
+    } catch {
+      setStatus('error');
+      setMessage('Something went wrong. Please try again.');
+    }
+  };
 
   const tabs = [
     { 
@@ -26,22 +62,39 @@ export function TryItOut() {
     <section className="pt-2 pb-8 px-4 sm:px-6">
       <div className="max-w-2xl mx-auto">
         {/* Email Input Card */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2 sm:p-2">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2 sm:p-2">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <input
               type="email"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email..."
               className="flex-1 px-4 py-3 text-gray-900 placeholder-gray-400 bg-transparent outline-none text-sm min-w-0"
+              disabled={status === 'loading' || status === 'success'}
             />
-            <button className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-medium text-white btn-gradient rounded-xl whitespace-nowrap">
-              <Lock className="w-3.5 h-3.5" />
-              <span className="hidden xs:inline">Request Beta Access</span>
-              <span className="xs:hidden">Join Beta</span>
+            <button 
+              type="submit"
+              disabled={status === 'loading' || status === 'success'}
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-medium text-white btn-gradient rounded-xl whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {status === 'loading' ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : status === 'success' ? (
+                <Check className="w-4 h-4" />
+              ) : (
+                <Lock className="w-3.5 h-3.5" />
+              )}
+              {status === 'success' ? "You're in!" : status === 'loading' ? 'Joining...' : 'Join Beta'}
             </button>
           </div>
-        </div>
+          
+          {/* Status Message */}
+          {message && (
+            <p className={`mt-2 text-sm text-center ${status === 'success' ? 'text-green-600' : 'text-red-500'}`}>
+              {message}
+            </p>
+          )}
+        </form>
 
         {/* Liquid Glass Bubble */}
         <div className="mt-10 sm:mt-16 flex justify-center">
