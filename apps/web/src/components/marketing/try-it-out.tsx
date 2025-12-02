@@ -205,10 +205,10 @@ export function TryItOut() {
           <AnimatePresence>
             {showContactModal && (
               <motion.div
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                transition={{ type: 'spring', damping: 25, stiffness: 400 }}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }}
+                transition={{ duration: 0.15, ease: 'easeOut' }}
                 className="absolute bottom-full mb-3"
                 style={{ 
                   left: '50%',
