@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   description: 'Stop losing sales to competitors you don\'t even see. Track ads, pricing, SEO, and product launches in real-time.',
   keywords: ['competitive intelligence', 'competitor monitoring', 'market intelligence', 'competitor analysis', 'business intelligence'],
   icons: {
-    icon: '/images/branding/favicon.ico',
-    apple: '/images/branding/apple-touch-icon.png',
+    icon: '/images/branding/logosentryaxfondblanc.png',
+    apple: '/images/branding/logosentryaxfondblanc.png',
   },
   openGraph: {
     title: 'Sentryax - Competitive Intelligence Platform',
