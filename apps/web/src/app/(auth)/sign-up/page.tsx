@@ -59,21 +59,12 @@ export default function SignUpPage() {
     return (
       <div className="min-h-screen hero-noise flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          <div className="text-center mb-10">
-            <Link href="/">
-              <Image
-                src="/images/branding/logosentryaxx.png"
-                alt="Sentryax"
-                width={180}
-                height={48}
-                priority
-                className="h-12 w-auto mx-auto"
-              />
-            </Link>
-          </div>
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Mail className="w-8 h-8 text-green-600" />
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 pt-10 text-center">
+            <div 
+              className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+              style={{ background: 'linear-gradient(135deg, #fef3e7 0%, #fde8d7 100%)' }}
+            >
+              <Mail className="w-8 h-8" style={{ color: '#b8860b' }} />
             </div>
             <h1 className="text-2xl font-semibold text-gray-900 mb-2">
               Check your email
@@ -96,22 +87,30 @@ export default function SignUpPage() {
   return (
     <div className="min-h-screen hero-noise flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="text-center mb-10">
-          <Link href="/">
-            <Image
-              src="/images/branding/logosentryaxx.png"
-              alt="Sentryax"
-              width={180}
-              height={48}
-              priority
-              className="h-12 w-auto mx-auto"
-            />
-          </Link>
-        </div>
-
         {/* Card */}
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 pt-10">
+          {/* Logo with dotted border */}
+          <div className="flex justify-center mb-8">
+            <div className="relative p-4">
+              {/* Dotted circle */}
+              <div 
+                className="absolute inset-0 rounded-full"
+                style={{
+                  border: '2px dashed rgba(0,0,0,0.08)',
+                }}
+              />
+              <Link href="/">
+                <Image
+                  src="/images/branding/logosentryaxx.png"
+                  alt="Sentryax"
+                  width={160}
+                  height={42}
+                  priority
+                  className="h-10 w-auto relative"
+                />
+              </Link>
+            </div>
+          </div>
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-semibold text-gray-900 mb-2">
