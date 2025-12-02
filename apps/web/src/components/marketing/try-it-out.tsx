@@ -41,7 +41,9 @@ export function TryItOut() {
   
   const containerRef = useRef<HTMLDivElement>(null);
   const mailIconRef = useRef<HTMLButtonElement>(null);
+  const projectIconRef = useRef<HTMLButtonElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  const projectModalRef = useRef<HTMLDivElement>(null);
 
   // Calculate modal position dynamically based on mail icon position
   const updateModalPosition = useCallback(() => {
@@ -90,6 +92,22 @@ export function TryItOut() {
       };
     }
   }, [showContactModal, updateModalPosition]);
+
+  // Close project modal when clicking outside
+  useEffect(() => {
+    if (showProjectModal) {
+      const handleClickOutside = (e: MouseEvent) => {
+        if (projectModalRef.current && !projectModalRef.current.contains(e.target as Node) &&
+            projectIconRef.current && !projectIconRef.current.contains(e.target as Node)) {
+          setShowProjectModal(false);
+          setActiveTab(null);
+        }
+      };
+      
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showProjectModal]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -228,10 +246,11 @@ export function TryItOut() {
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               const isMailIcon = tab.id === 'mail';
+              const isProjectIcon = tab.id === 'project';
               return (
                 <div key={tab.id} className="relative">
                   <button
-                    ref={isMailIcon ? mailIconRef : undefined}
+                    ref={isMailIcon ? mailIconRef : isProjectIcon ? projectIconRef : undefined}
                     type="button"
                     onClick={() => {
                       if (tab.action === 'contact') {
@@ -341,144 +360,131 @@ export function TryItOut() {
             )}
           </AnimatePresence>
 
-          {/* Project Modal - Full screen overlay */}
+          {/* Project Modal - Same liquid glass style as contact */}
           <AnimatePresence>
             {showProjectModal && (
-              <>
-                {/* Backdrop */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  onClick={() => {
-                    setShowProjectModal(false);
-                    setActiveTab(null);
+              <motion.div
+                ref={projectModalRef}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 6 }}
+                transition={{ duration: 0.12, ease: 'easeOut' }}
+                className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2"
+                style={{ width: 340 }}
+              >
+                {/* Layer 1: Outer glow */}
+                <div 
+                  className="absolute -inset-2 rounded-3xl pointer-events-none"
+                  style={{
+                    background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, transparent 70%)',
                   }}
-                  className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50"
                 />
                 
-                {/* Modal */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  className="fixed inset-4 sm:inset-auto sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-full sm:max-w-lg z-50 overflow-hidden"
+                {/* Layer 2: Main glass container */}
+                <div 
+                  className="relative rounded-2xl p-4 overflow-hidden"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.18)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    border: '1px solid rgba(255, 255, 255, 0.35)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255,255,255,0.4)',
+                  }}
                 >
+                  {/* Layer 3: Inner gradient */}
                   <div 
-                    className="h-full sm:h-auto rounded-3xl overflow-hidden"
+                    className="absolute inset-0 rounded-2xl pointer-events-none"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.95)',
-                      backdropFilter: 'blur(40px)',
-                      WebkitBackdropFilter: 'blur(40px)',
-                      border: '1px solid rgba(255, 255, 255, 0.6)',
-                      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255,255,255,0.1)',
+                      background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 50%)',
                     }}
-                  >
-                    {/* Header gradient */}
-                    <div className="relative h-32 sm:h-40 overflow-hidden">
+                  />
+                  
+                  {/* Content */}
+                  <div className="relative">
+                    {/* Header */}
+                    <div className="flex items-center gap-3 mb-4 pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.3)' }}>
                       <div 
-                        className="absolute inset-0"
+                        className="flex items-center justify-center w-10 h-10 rounded-xl"
                         style={{
-                          background: 'linear-gradient(135deg, #f97316 0%, #fb923c 50%, #fcd34d 100%)',
+                          background: 'rgba(255, 255, 255, 0.3)',
+                          border: '1px solid rgba(255, 255, 255, 0.4)',
                         }}
-                      />
-                      <div 
-                        className="absolute inset-0"
-                        style={{
-                          background: 'radial-gradient(circle at 30% 70%, rgba(255,255,255,0.3) 0%, transparent 50%)',
-                        }}
-                      />
-                      
-                      {/* Close button */}
-                      <button
-                        onClick={() => {
-                          setShowProjectModal(false);
-                          setActiveTab(null);
-                        }}
-                        className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
                       >
-                        <X className="w-5 h-5 text-white" />
-                      </button>
-                      
-                      {/* Logo/Icon */}
-                      <div className="absolute bottom-0 left-6 translate-y-1/2">
-                        <div 
-                          className="w-16 h-16 rounded-2xl flex items-center justify-center"
-                          style={{
-                            background: 'white',
-                            boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
-                          }}
-                        >
-                          <Shield className="w-8 h-8 text-orange-500" />
+                        <Shield className="w-5 h-5" style={{ color: 'rgba(50,50,50,0.85)' }} />
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold" style={{ color: 'rgba(40,40,40,0.95)' }}>
+                          What is Sentryax?
+                        </div>
+                        <div className="text-xs" style={{ color: 'rgba(60,60,60,0.65)' }}>
+                          Competitive intelligence platform
                         </div>
                       </div>
                     </div>
                     
-                    {/* Content */}
-                    <div className="px-6 pt-12 pb-6 overflow-y-auto max-h-[calc(100vh-16rem)] sm:max-h-none">
-                      <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                        What is Sentryax?
-                      </h2>
-                      <p className="text-gray-500 text-sm mb-6">
-                        Your competitive intelligence command center
-                      </p>
-                      
-                      {/* Features */}
-                      <div className="space-y-4 mb-6">
-                        <div className="flex gap-4">
-                          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
-                            <Eye className="w-5 h-5 text-orange-600" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-gray-900 text-sm">Real-time Monitoring</h3>
-                            <p className="text-gray-500 text-sm">Track competitor ads, pricing, SEO changes, and product launches as they happen.</p>
-                          </div>
+                    {/* Features */}
+                    <div className="space-y-2.5">
+                      <div className="flex items-start gap-3 px-2 py-2 rounded-xl hover:bg-white/20 transition-all">
+                        <div 
+                          className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-lg mt-0.5"
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.3)',
+                            border: '1px solid rgba(255, 255, 255, 0.4)',
+                          }}
+                        >
+                          <Eye className="w-3.5 h-3.5" style={{ color: 'rgba(50,50,50,0.85)' }} />
                         </div>
-                        
-                        <div className="flex gap-4">
-                          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                            <TrendingUp className="w-5 h-5 text-blue-600" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-gray-900 text-sm">Actionable Insights</h3>
-                            <p className="text-gray-500 text-sm">Get AI-powered analysis and recommendations to stay ahead of the competition.</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex gap-4">
-                          <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
-                            <Zap className="w-5 h-5 text-purple-600" />
-                          </div>
-                          <div>
-                            <h3 className="font-semibold text-gray-900 text-sm">Instant Alerts</h3>
-                            <p className="text-gray-500 text-sm">Never miss a move. Get notified the moment your competitors make changes.</p>
-                          </div>
+                        <div>
+                          <div className="text-xs font-medium" style={{ color: 'rgba(40,40,40,0.95)' }}>Real-time Monitoring</div>
+                          <div className="text-xs leading-relaxed" style={{ color: 'rgba(60,60,60,0.65)' }}>Track ads, pricing, SEO & launches</div>
                         </div>
                       </div>
                       
-                      {/* CTA */}
-                      <div 
-                        className="p-4 rounded-2xl mb-4"
-                        style={{
-                          background: 'linear-gradient(135deg, rgba(249,115,22,0.1) 0%, rgba(251,146,60,0.1) 100%)',
-                          border: '1px solid rgba(249,115,22,0.2)',
-                        }}
-                      >
-                        <p className="text-sm text-gray-700 leading-relaxed">
-                          <span className="font-semibold text-orange-600">Currently in private beta.</span> Join the waitlist above to get early access and shape the future of competitive intelligence.
-                        </p>
+                      <div className="flex items-start gap-3 px-2 py-2 rounded-xl hover:bg-white/20 transition-all">
+                        <div 
+                          className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-lg mt-0.5"
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.3)',
+                            border: '1px solid rgba(255, 255, 255, 0.4)',
+                          }}
+                        >
+                          <TrendingUp className="w-3.5 h-3.5" style={{ color: 'rgba(50,50,50,0.85)' }} />
+                        </div>
+                        <div>
+                          <div className="text-xs font-medium" style={{ color: 'rgba(40,40,40,0.95)' }}>AI-Powered Insights</div>
+                          <div className="text-xs leading-relaxed" style={{ color: 'rgba(60,60,60,0.65)' }}>Smart analysis & recommendations</div>
+                        </div>
                       </div>
                       
-                      {/* Footer */}
-                      <p className="text-xs text-gray-400 text-center">
-                        Built with ❤️ for ambitious founders
-                      </p>
+                      <div className="flex items-start gap-3 px-2 py-2 rounded-xl hover:bg-white/20 transition-all">
+                        <div 
+                          className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-lg mt-0.5"
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.3)',
+                            border: '1px solid rgba(255, 255, 255, 0.4)',
+                          }}
+                        >
+                          <Zap className="w-3.5 h-3.5" style={{ color: 'rgba(50,50,50,0.85)' }} />
+                        </div>
+                        <div>
+                          <div className="text-xs font-medium" style={{ color: 'rgba(40,40,40,0.95)' }}>Instant Alerts</div>
+                          <div className="text-xs leading-relaxed" style={{ color: 'rgba(60,60,60,0.65)' }}>Get notified when competitors move</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Footer */}
+                    <div 
+                      className="mt-4 pt-3 text-center"
+                      style={{ borderTop: '1px solid rgba(255,255,255,0.3)' }}
+                    >
+                      <span className="text-xs" style={{ color: 'rgba(60,60,60,0.6)' }}>
+                        Currently in private beta ✨
+                      </span>
                     </div>
                   </div>
-                </motion.div>
-              </>
+                </div>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
