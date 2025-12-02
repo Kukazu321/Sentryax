@@ -201,7 +201,7 @@ export function TryItOut() {
             })}
           </div>
 
-          {/* Contact Popup - positioned above the bubble */}
+          {/* Contact Popup - positioned above the mail icon (3rd icon) */}
           <AnimatePresence>
             {showContactModal && (
               <motion.div
@@ -209,16 +209,22 @@ export function TryItOut() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ type: 'spring', damping: 25, stiffness: 400 }}
-                className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2"
+                className="absolute bottom-full mb-3"
+                style={{ 
+                  left: '50%',
+                  transform: 'translateX(-65%)', // Offset to align with mail icon (3rd of 4)
+                }}
               >
                 <div 
                   className="rounded-2xl p-3 min-w-[280px]"
                   style={glassStyle}
                 >
-                  {/* Small arrow pointing down */}
+                  {/* Small arrow pointing down - positioned to point at mail icon */}
                   <div 
-                    className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45"
+                    className="absolute -bottom-2 w-4 h-4 rotate-45"
                     style={{
+                      left: '65%',
+                      transform: 'translateX(-50%)',
                       background: 'rgba(255, 255, 255, 0.15)',
                       border: '1px solid rgba(255, 255, 255, 0.3)',
                       borderTop: 'none',
