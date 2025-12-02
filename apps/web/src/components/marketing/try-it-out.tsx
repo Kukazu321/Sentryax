@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Lock, Instagram, Mail, FileText, Loader2, Check, User, Headphones, Sparkles, ArrowRight, Zap, Eye, TrendingUp, Shield } from 'lucide-react';
+import { Lock, Instagram, Mail, FileText, Loader2, Check, User, Headphones, Sparkles, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const contactOptions = [
@@ -35,15 +35,12 @@ export function TryItOut() {
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [showContactModal, setShowContactModal] = useState(false);
-  const [showProjectModal, setShowProjectModal] = useState(false);
   const [formStep, setFormStep] = useState<'name' | 'email'>('name');
   const [modalPosition, setModalPosition] = useState({ left: 0, arrowLeft: 0 });
   
   const containerRef = useRef<HTMLDivElement>(null);
   const mailIconRef = useRef<HTMLButtonElement>(null);
-  const projectIconRef = useRef<HTMLButtonElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
-  const projectModalRef = useRef<HTMLDivElement>(null);
 
   // Calculate modal position dynamically based on mail icon position
   const updateModalPosition = useCallback(() => {
@@ -93,21 +90,6 @@ export function TryItOut() {
     }
   }, [showContactModal, updateModalPosition]);
 
-  // Close project modal when clicking outside
-  useEffect(() => {
-    if (showProjectModal) {
-      const handleClickOutside = (e: MouseEvent) => {
-        if (projectModalRef.current && !projectModalRef.current.contains(e.target as Node) &&
-            projectIconRef.current && !projectIconRef.current.contains(e.target as Node)) {
-          setShowProjectModal(false);
-          setActiveTab(null);
-        }
-      };
-      
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [showProjectModal]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -168,7 +150,7 @@ export function TryItOut() {
     },
     { id: 'instagram', icon: <Instagram className="w-4 h-4" strokeWidth={1.5} />, href: 'https://www.instagram.com/sentryaxhq/' },
     { id: 'mail', icon: <Mail className="w-4 h-4" strokeWidth={1.5} />, action: 'contact' },
-    { id: 'project', icon: <FileText className="w-4 h-4" strokeWidth={1.5} />, action: 'project' },
+    { id: 'project', icon: <FileText className="w-4 h-4" strokeWidth={1.5} />, href: '/manifesto' },
   ];
 
   const glassStyle = {
@@ -246,21 +228,15 @@ export function TryItOut() {
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               const isMailIcon = tab.id === 'mail';
-              const isProjectIcon = tab.id === 'project';
               return (
                 <div key={tab.id} className="relative">
                   <button
-                    ref={isMailIcon ? mailIconRef : isProjectIcon ? projectIconRef : undefined}
+                    ref={isMailIcon ? mailIconRef : undefined}
                     type="button"
                     onClick={() => {
                       if (tab.action === 'contact') {
                         setActiveTab(isActive ? null : tab.id);
                         setShowContactModal(!showContactModal);
-                        setShowProjectModal(false);
-                      } else if (tab.action === 'project') {
-                        setActiveTab(isActive ? null : tab.id);
-                        setShowProjectModal(!showProjectModal);
-                        setShowContactModal(false);
                       } else if (tab.href) {
                         window.open(tab.href, '_blank');
                       }
@@ -360,133 +336,6 @@ export function TryItOut() {
             )}
           </AnimatePresence>
 
-          {/* Project Modal - Same liquid glass style as contact */}
-          <AnimatePresence>
-            {showProjectModal && (
-              <motion.div
-                ref={projectModalRef}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 6 }}
-                transition={{ duration: 0.12, ease: 'easeOut' }}
-                className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2"
-                style={{ width: 340 }}
-              >
-                {/* Layer 1: Outer glow */}
-                <div 
-                  className="absolute -inset-2 rounded-3xl pointer-events-none"
-                  style={{
-                    background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, transparent 70%)',
-                  }}
-                />
-                
-                {/* Layer 2: Main glass container */}
-                <div 
-                  className="relative rounded-2xl p-4 overflow-hidden"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.18)',
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
-                    border: '1px solid rgba(255, 255, 255, 0.35)',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255,255,255,0.4)',
-                  }}
-                >
-                  {/* Layer 3: Inner gradient */}
-                  <div 
-                    className="absolute inset-0 rounded-2xl pointer-events-none"
-                    style={{
-                      background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 50%)',
-                    }}
-                  />
-                  
-                  {/* Content */}
-                  <div className="relative">
-                    {/* Header */}
-                    <div className="flex items-center gap-3 mb-4 pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.3)' }}>
-                      <div 
-                        className="flex items-center justify-center w-10 h-10 rounded-xl"
-                        style={{
-                          background: 'rgba(255, 255, 255, 0.3)',
-                          border: '1px solid rgba(255, 255, 255, 0.4)',
-                        }}
-                      >
-                        <Shield className="w-5 h-5" style={{ color: 'rgba(50,50,50,0.85)' }} />
-                      </div>
-                      <div>
-                        <div className="text-sm font-semibold" style={{ color: 'rgba(40,40,40,0.95)' }}>
-                          What is Sentryax?
-                        </div>
-                        <div className="text-xs" style={{ color: 'rgba(60,60,60,0.65)' }}>
-                          Competitive intelligence platform
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Features */}
-                    <div className="space-y-2.5">
-                      <div className="flex items-start gap-3 px-2 py-2 rounded-xl hover:bg-white/20 transition-all">
-                        <div 
-                          className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-lg mt-0.5"
-                          style={{
-                            background: 'rgba(255, 255, 255, 0.3)',
-                            border: '1px solid rgba(255, 255, 255, 0.4)',
-                          }}
-                        >
-                          <Eye className="w-3.5 h-3.5" style={{ color: 'rgba(50,50,50,0.85)' }} />
-                        </div>
-                        <div>
-                          <div className="text-xs font-medium" style={{ color: 'rgba(40,40,40,0.95)' }}>Real-time Monitoring</div>
-                          <div className="text-xs leading-relaxed" style={{ color: 'rgba(60,60,60,0.65)' }}>Track ads, pricing, SEO & launches</div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3 px-2 py-2 rounded-xl hover:bg-white/20 transition-all">
-                        <div 
-                          className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-lg mt-0.5"
-                          style={{
-                            background: 'rgba(255, 255, 255, 0.3)',
-                            border: '1px solid rgba(255, 255, 255, 0.4)',
-                          }}
-                        >
-                          <TrendingUp className="w-3.5 h-3.5" style={{ color: 'rgba(50,50,50,0.85)' }} />
-                        </div>
-                        <div>
-                          <div className="text-xs font-medium" style={{ color: 'rgba(40,40,40,0.95)' }}>AI-Powered Insights</div>
-                          <div className="text-xs leading-relaxed" style={{ color: 'rgba(60,60,60,0.65)' }}>Smart analysis & recommendations</div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3 px-2 py-2 rounded-xl hover:bg-white/20 transition-all">
-                        <div 
-                          className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-lg mt-0.5"
-                          style={{
-                            background: 'rgba(255, 255, 255, 0.3)',
-                            border: '1px solid rgba(255, 255, 255, 0.4)',
-                          }}
-                        >
-                          <Zap className="w-3.5 h-3.5" style={{ color: 'rgba(50,50,50,0.85)' }} />
-                        </div>
-                        <div>
-                          <div className="text-xs font-medium" style={{ color: 'rgba(40,40,40,0.95)' }}>Instant Alerts</div>
-                          <div className="text-xs leading-relaxed" style={{ color: 'rgba(60,60,60,0.65)' }}>Get notified when competitors move</div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Footer */}
-                    <div 
-                      className="mt-4 pt-3 text-center"
-                      style={{ borderTop: '1px solid rgba(255,255,255,0.3)' }}
-                    >
-                      <span className="text-xs" style={{ color: 'rgba(60,60,60,0.6)' }}>
-                        Currently in private beta ✨
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </div>
     </section>
