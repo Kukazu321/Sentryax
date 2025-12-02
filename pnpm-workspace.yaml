@@ -1,0 +1,5 @@
+# Turborepo monorepo workspace configuration
+# All apps and packages are managed from here
+packages:
+  - "apps/*"
+  - "packages/*"
