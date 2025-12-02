@@ -11,31 +11,45 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const apiKey = process.env.LOOPS_API_KEY;
+    
+    if (!apiKey) {
+      console.error('LOOPS_API_KEY is not configured');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
+
     // Send to Loops
     const response = await fetch('https://app.loops.so/api/v1/contacts/create', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.LOOPS_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         email: email,
         source: 'website_waitlist',
-        userGroup: 'beta_waitlist',
       }),
     });
 
     const data = await response.json();
+    console.log('Loops API response:', response.status, data);
 
     if (!response.ok) {
       // If contact already exists, that's fine
-      if (data.message?.includes('already exists')) {
+      if (data.message?.includes('already') || data.message?.includes('exists')) {
         return NextResponse.json({ 
           success: true, 
           message: "You're already on the waitlist!" 
         });
       }
-      throw new Error(data.message || 'Failed to subscribe');
+      console.error('Loops API error:', data);
+      return NextResponse.json(
+        { error: data.message || 'Failed to subscribe' },
+        { status: response.status }
+      );
     }
 
     return NextResponse.json({ 
