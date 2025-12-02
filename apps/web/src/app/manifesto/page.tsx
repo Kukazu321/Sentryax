@@ -15,10 +15,10 @@ export default function ManifestoPage() {
             <Image 
               src="/images/branding/logosentryaxx.png" 
               alt="Sentryax" 
-              width={140} 
-              height={36}
+              width={200} 
+              height={52}
               priority
-              className="h-8 w-auto"
+              className="h-10 sm:h-14 w-auto"
             />
           </Link>
           <Link 
@@ -81,17 +81,13 @@ export default function ManifestoPage() {
               </p>
             </div>
 
-            <p className="text-gray-500 text-base">
-              Currently in private beta.
-            </p>
-
           </div>
 
           {/* CTA */}
-          <div className="mt-16">
+          <div className="mt-8">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-gray-700 bg-white rounded-full border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all"
+              className="inline-flex items-center gap-2 px-5 py-3 text-sm font-medium text-white btn-gradient rounded-xl transition-all"
             >
               Join the waitlist
             </Link>
