@@ -6,7 +6,7 @@ import { Lock } from 'lucide-react';
 
 export function Header() {
   return (
-    <header className="w-full py-3 sm:py-4 px-4 sm:px-6">
+    <header className="w-full py-2 sm:py-4 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">

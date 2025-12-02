@@ -207,7 +207,7 @@ export function TryItOut() {
         </form>
 
         {/* Liquid Glass Bubble */}
-        <div className="mt-10 sm:mt-16 flex justify-center relative" ref={containerRef}>
+        <div className="mt-6 sm:mt-16 flex justify-center relative" ref={containerRef}>
           <div className="relative flex items-center gap-3 px-6 py-2 rounded-full" style={glassStyle}>
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
