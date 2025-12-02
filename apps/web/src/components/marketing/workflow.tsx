@@ -189,7 +189,7 @@ export function Workflow() {
   );
 }
 
-function StepContent({ step, index, setActiveStep }: { step: any, index: number, setActiveStep: (i: number) => void }) {
+function StepContent({ step, index, setActiveStep }: { step: Step, index: number, setActiveStep: (i: number) => void }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { 
     margin: "-40% 0px -40% 0px", // Trigger when element is in the middle 20% of screen

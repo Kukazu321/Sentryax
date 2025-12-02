@@ -2,14 +2,11 @@
 
 import { motion } from 'framer-motion';
 import { 
-  Zap, 
-  Shield, 
   LineChart, 
   Globe, 
   Smartphone, 
   Bell,
-  Code2,
-  Search 
+  Code2
 } from 'lucide-react';
 
 export function BentoFeatures() {

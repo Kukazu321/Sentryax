@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Lock, Instagram, Mail, FileText } from 'lucide-react';
 
 export function TryItOut() {
