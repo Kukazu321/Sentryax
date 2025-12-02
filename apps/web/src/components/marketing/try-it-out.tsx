@@ -161,11 +161,11 @@ export function TryItOut() {
   };
 
   return (
-    <section className="pt-2 pb-8 px-4 sm:px-6">
-      <div className="max-w-2xl mx-auto">
+    <section className="pt-4 sm:pt-2 pb-6 sm:pb-8 px-5 sm:px-6">
+      <div className="max-w-md sm:max-w-2xl mx-auto">
         {/* Email Input Card */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2 sm:p-2">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-2">
+          <div className="flex items-center gap-2">
             <AnimatePresence mode="wait">
               {formStep === 'name' ? (
                 <motion.input
@@ -176,8 +176,8 @@ export function TryItOut() {
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="What's your first name?"
-                  className="flex-1 px-4 py-3 text-gray-900 placeholder-gray-400 bg-transparent outline-none text-sm min-w-0"
+                  placeholder="Your first name"
+                  className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 text-gray-900 placeholder-gray-400 bg-transparent outline-none text-sm min-w-0"
                   disabled={status === 'loading' || status === 'success'}
                 />
               ) : (
@@ -189,8 +189,8 @@ export function TryItOut() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={`Nice to meet you ${firstName}! Your email?`}
-                  className="flex-1 px-4 py-3 text-gray-900 placeholder-gray-400 bg-transparent outline-none text-sm min-w-0"
+                  placeholder="Your email"
+                  className="flex-1 px-3 sm:px-4 py-2.5 sm:py-3 text-gray-900 placeholder-gray-400 bg-transparent outline-none text-sm min-w-0"
                   disabled={status === 'loading' || status === 'success'}
                 />
               )}
@@ -198,7 +198,7 @@ export function TryItOut() {
             <button 
               type="submit"
               disabled={status === 'loading' || status === 'success'}
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-medium text-white btn-gradient rounded-xl whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
+              className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-medium text-white btn-gradient rounded-xl whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {status === 'loading' ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -209,7 +209,7 @@ export function TryItOut() {
               ) : (
                 <Lock className="w-3.5 h-3.5" />
               )}
-              {status === 'success' ? "You're in!" : status === 'loading' ? 'Joining...' : formStep === 'name' ? 'Continue' : 'Join Beta'}
+              <span className="hidden sm:inline">{status === 'success' ? "You're in!" : status === 'loading' ? 'Joining...' : formStep === 'name' ? 'Continue' : 'Join Beta'}</span>
             </button>
           </div>
           
