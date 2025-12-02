@@ -36,7 +36,6 @@ export async function POST(request: NextRequest) {
     });
 
     const data = await response.json();
-    console.log('Loops API response:', response.status, data);
 
     if (!response.ok) {
       // If contact already exists, that's fine

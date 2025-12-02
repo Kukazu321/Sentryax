@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Lock, Instagram, Mail, FileText, Loader2, Check, User, Headphones, Sparkles, ArrowRight, X, Zap, Eye, TrendingUp, Shield } from 'lucide-react';
+import { Lock, Instagram, Mail, FileText, Loader2, Check, User, Headphones, Sparkles, ArrowRight, Zap, Eye, TrendingUp, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const contactOptions = [
