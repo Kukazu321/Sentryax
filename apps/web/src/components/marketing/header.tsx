@@ -15,7 +15,9 @@ export function Header() {
             alt="Sentryax" 
             width={200} 
             height={52}
-            className="h-10 sm:h-14 w-auto"
+            priority
+            className="h-10 sm:h-14 w-auto object-contain"
+            style={{ width: 'auto', height: 'auto', maxHeight: '56px' }}
           />
         </Link>
 

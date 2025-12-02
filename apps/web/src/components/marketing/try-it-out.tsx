@@ -316,19 +316,6 @@ export function TryItOut() {
                   </div>
                 </div>
 
-                {/* Arrow pointing down - dynamically positioned */}
-                <div 
-                  className="absolute -bottom-[6px] w-3 h-3 rotate-45"
-                  style={{
-                    left: modalPosition.arrowLeft,
-                    transform: 'translateX(-50%)',
-                    background: 'rgba(255, 255, 255, 0.18)',
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
-                    borderRight: '1px solid rgba(255, 255, 255, 0.35)',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.35)',
-                  }}
-                />
               </motion.div>
             )}
           </AnimatePresence>
