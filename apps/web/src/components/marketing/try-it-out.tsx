@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Lock, Instagram, Mail, FileText, Loader2, Check, User, Headphones, Sparkles, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -36,7 +36,44 @@ export function TryItOut() {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [showContactModal, setShowContactModal] = useState(false);
   const [formStep, setFormStep] = useState<'name' | 'email'>('name');
-  const bubbleRef = useRef<HTMLDivElement>(null);
+  const [modalPosition, setModalPosition] = useState({ left: 0, arrowLeft: 0 });
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mailIconRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Calculate modal position dynamically based on mail icon position
+  const updateModalPosition = useCallback(() => {
+    if (!mailIconRef.current || !containerRef.current) return;
+    
+    const iconRect = mailIconRef.current.getBoundingClientRect();
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const modalWidth = 280;
+    
+    // Center of mail icon relative to container
+    const iconCenterX = iconRect.left + iconRect.width / 2 - containerRect.left;
+    
+    // Position modal so arrow points to icon center
+    let modalLeft = iconCenterX - modalWidth / 2;
+    
+    // Clamp to container bounds
+    const minLeft = 0;
+    const maxLeft = containerRect.width - modalWidth;
+    modalLeft = Math.max(minLeft, Math.min(maxLeft, modalLeft));
+    
+    // Arrow position relative to modal
+    const arrowLeft = iconCenterX - modalLeft;
+    
+    setModalPosition({ left: modalLeft, arrowLeft });
+  }, []);
+
+  useEffect(() => {
+    if (showContactModal) {
+      updateModalPosition();
+      window.addEventListener('resize', updateModalPosition);
+      return () => window.removeEventListener('resize', updateModalPosition);
+    }
+  }, [showContactModal, updateModalPosition]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,13 +207,15 @@ export function TryItOut() {
         </form>
 
         {/* Liquid Glass Bubble */}
-        <div className="mt-10 sm:mt-16 flex justify-center relative" ref={bubbleRef}>
+        <div className="mt-10 sm:mt-16 flex justify-center relative" ref={containerRef}>
           <div className="relative flex items-center gap-3 px-6 py-2 rounded-full" style={glassStyle}>
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
+              const isMailIcon = tab.id === 'mail';
               return (
                 <div key={tab.id} className="relative">
                   <button
+                    ref={isMailIcon ? mailIconRef : undefined}
                     type="button"
                     onClick={() => {
                       if (tab.action === 'contact') {
@@ -201,39 +240,47 @@ export function TryItOut() {
             })}
           </div>
 
-          {/* Contact Popup - positioned above the mail icon (3rd icon) */}
+          {/* Contact Popup - dynamically positioned above mail icon */}
           <AnimatePresence>
             {showContactModal && (
               <motion.div
-                initial={{ opacity: 0, y: 8 }}
+                ref={modalRef}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 8 }}
-                transition={{ duration: 0.15, ease: 'easeOut' }}
+                exit={{ opacity: 0, y: 6 }}
+                transition={{ duration: 0.12, ease: 'easeOut' }}
                 className="absolute bottom-full mb-3"
-                style={{ 
-                  left: '50%',
-                  transform: 'translateX(-65%)', // Offset to align with mail icon (3rd of 4)
-                }}
+                style={{ left: modalPosition.left, width: 280 }}
               >
+                {/* Layer 1: Outer glow for smooth edge transition */}
                 <div 
-                  className="rounded-2xl p-3 min-w-[280px]"
-                  style={glassStyle}
+                  className="absolute -inset-2 rounded-3xl pointer-events-none"
+                  style={{
+                    background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, transparent 70%)',
+                  }}
+                />
+                
+                {/* Layer 2: Main glass container */}
+                <div 
+                  className="relative rounded-2xl p-3 overflow-hidden"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.18)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    border: '1px solid rgba(255, 255, 255, 0.35)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255,255,255,0.4)',
+                  }}
                 >
-                  {/* Small arrow pointing down - positioned to point at mail icon */}
+                  {/* Layer 3: Inner subtle gradient overlay */}
                   <div 
-                    className="absolute -bottom-2 w-4 h-4 rotate-45"
+                    className="absolute inset-0 rounded-2xl pointer-events-none"
                     style={{
-                      left: '65%',
-                      transform: 'translateX(-50%)',
-                      background: 'rgba(255, 255, 255, 0.15)',
-                      border: '1px solid rgba(255, 255, 255, 0.3)',
-                      borderTop: 'none',
-                      borderLeft: 'none',
+                      background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 50%)',
                     }}
                   />
                   
                   {/* Contact Options */}
-                  <div className="space-y-1">
+                  <div className="relative space-y-1">
                     {contactOptions.map((option) => (
                       <a
                         key={option.id}
@@ -242,24 +289,25 @@ export function TryItOut() {
                           setShowContactModal(false);
                           setActiveTab(null);
                         }}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all hover:bg-white/30 group cursor-pointer"
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 hover:bg-white/25 group cursor-pointer"
                       >
                         <div 
-                          className="flex items-center justify-center w-8 h-8 rounded-lg"
+                          className="flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200 group-hover:scale-105"
                           style={{
-                            background: 'rgba(255, 255, 255, 0.25)',
-                            border: '1px solid rgba(255, 255, 255, 0.35)',
+                            background: 'rgba(255, 255, 255, 0.3)',
+                            border: '1px solid rgba(255, 255, 255, 0.4)',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
                           }}
                         >
-                          <span style={{ color: 'rgba(60,60,60,0.8)' }}>
+                          <span style={{ color: 'rgba(50,50,50,0.85)' }}>
                             {option.icon}
                           </span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-sm font-medium" style={{ color: 'rgba(50,50,50,0.9)' }}>
+                          <div className="text-sm font-medium" style={{ color: 'rgba(40,40,40,0.95)' }}>
                             {option.title}
                           </div>
-                          <div className="text-xs" style={{ color: 'rgba(80,80,80,0.6)' }}>
+                          <div className="text-xs" style={{ color: 'rgba(60,60,60,0.65)' }}>
                             {option.description}
                           </div>
                         </div>
@@ -267,6 +315,20 @@ export function TryItOut() {
                     ))}
                   </div>
                 </div>
+
+                {/* Arrow pointing down - dynamically positioned */}
+                <div 
+                  className="absolute -bottom-[6px] w-3 h-3 rotate-45"
+                  style={{
+                    left: modalPosition.arrowLeft,
+                    transform: 'translateX(-50%)',
+                    background: 'rgba(255, 255, 255, 0.18)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    borderRight: '1px solid rgba(255, 255, 255, 0.35)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.35)',
+                  }}
+                />
               </motion.div>
             )}
           </AnimatePresence>
