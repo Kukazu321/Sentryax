@@ -9,7 +9,7 @@ export default function ManifestoPage() {
   return (
     <div className="min-h-screen hero-noise">
       {/* Header */}
-      <header className="w-full py-6 px-6">
+      <header className="w-full py-2 sm:py-4 px-4 sm:px-6">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Image 

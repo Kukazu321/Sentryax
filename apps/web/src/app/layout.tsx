@@ -11,9 +11,19 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'PriceWatch - Competitive Intelligence for E-commerce',
-  description: 'Monitor competitors, detect changes, and automate counter-attacks for your Shopify store.',
-  keywords: ['competitive intelligence', 'e-commerce', 'shopify', 'price monitoring', 'competitor analysis'],
+  title: 'Sentryax - Competitive Intelligence Platform',
+  description: 'Stop losing sales to competitors you don\'t even see. Track ads, pricing, SEO, and product launches in real-time.',
+  keywords: ['competitive intelligence', 'competitor monitoring', 'market intelligence', 'competitor analysis', 'business intelligence'],
+  icons: {
+    icon: '/images/branding/favicon.ico',
+    apple: '/images/branding/apple-touch-icon.png',
+  },
+  openGraph: {
+    title: 'Sentryax - Competitive Intelligence Platform',
+    description: 'Stop losing sales to competitors you don\'t even see.',
+    siteName: 'Sentryax',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
