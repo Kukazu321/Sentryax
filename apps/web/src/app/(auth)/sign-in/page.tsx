@@ -50,22 +50,23 @@ export default function SignInPage() {
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 pt-10">
           {/* Logo with dotted border */}
           <div className="flex justify-center mb-8">
-            <div className="relative p-4">
-              {/* Dotted circle */}
-              <div 
-                className="absolute inset-0 rounded-full"
-                style={{
-                  border: '2px dashed rgba(0,0,0,0.08)',
-                }}
-              />
-              <Link href="/">
+            <div 
+              className="relative flex items-center justify-center"
+              style={{
+                width: '80px',
+                height: '80px',
+                border: '2px dashed rgba(0,0,0,0.1)',
+                borderRadius: '16px',
+              }}
+            >
+              <Link href="/" className="flex items-center justify-center">
                 <Image
-                  src="/images/branding/logosentryaxx.png"
+                  src="/images/branding/logosentryaxfondblanc.png"
                   alt="Sentryax"
-                  width={160}
-                  height={42}
+                  width={48}
+                  height={48}
                   priority
-                  className="h-10 w-auto relative"
+                  className="w-10 h-10 object-contain"
                 />
               </Link>
             </div>
