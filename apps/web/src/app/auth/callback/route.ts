@@ -36,8 +36,9 @@ export async function GET(request: Request) {
 
       if (data?.session) {
         console.log('✅ Email verified successfully, session created');
-        if (type === 'signup') {
-          console.log('🎉 Redirecting to /auth/confirmed');
+        // Check for signup flow explicitly
+        if (type === 'signup' || type === 'email' || type === 'invite') {
+          console.log('🎉 Signup/Email verification detected, forcing redirect to /auth/confirmed');
           return NextResponse.redirect(`${origin}/auth/confirmed`);
         }
         console.log('🏠 Redirecting to dashboard');
