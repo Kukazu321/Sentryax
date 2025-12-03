@@ -53,6 +53,7 @@ const recentActivity = [
 
 export default function DashboardPage() {
   const [userName, setUserName] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const supabase = createClient();
   const router = useRouter();
 
@@ -70,9 +71,14 @@ export default function DashboardPage() {
       if (user) {
         setUserName(user.user_metadata?.full_name?.split(' ')[0] || 'there');
       }
+      setIsLoading(false);
     };
     getUser();
   }, [supabase, router]);
+
+  if (isLoading) {
+    return null; // Or return a loading spinner
+  }
 
   return (
     <div className="space-y-8">
