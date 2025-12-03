@@ -10,12 +10,13 @@ import {
   Settings, 
   LogOut, 
   Menu, 
-  X,
   TrendingUp,
   Package,
   Users,
   BarChart3,
-  ChevronDown
+  ChevronDown,
+  PanelLeftClose,
+  PanelLeft
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
@@ -28,7 +29,8 @@ const navigation = [
 ];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);  // Desktop sidebar state
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [user, setUser] = useState<{ email?: string; full_name?: string } | null>(null);
   const pathname = usePathname();
@@ -58,85 +60,98 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#faf9f7]">
       {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
+      {mobileSidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
+          onClick={() => setMobileSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside className={`
-        fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-gray-100 
-        transform transition-transform duration-200 ease-in-out
-        lg:translate-x-0
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        fixed top-0 left-0 z-50 h-full bg-white border-r border-gray-100 
+        transform transition-all duration-200 ease-in-out
+        ${sidebarOpen ? 'w-64' : 'w-20'}
+        ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
       `}>
         {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-100">
-          <Link href="/app/dashboard" className="flex items-center gap-3">
+        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100">
+          <Link href="/app/dashboard" className="flex items-center justify-center">
             <Image
               src="/images/branding/logosentryaxfondblanc.png"
               alt="Sentryax"
-              width={32}
-              height={32}
-              className="w-8 h-8"
+              width={44}
+              height={44}
+              className="w-11 h-11"
               unoptimized
             />
-            <span className="font-semibold text-gray-900">Sentryax</span>
           </Link>
+          {/* Toggle button - desktop */}
           <button 
-            onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-1 text-gray-400 hover:text-gray-600"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="hidden lg:flex p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all"
           >
-            <X className="w-5 h-5" />
+            {sidebarOpen ? <PanelLeftClose className="w-5 h-5" /> : <PanelLeft className="w-5 h-5" />}
+          </button>
+          {/* Close button - mobile */}
+          <button 
+            onClick={() => setMobileSidebarOpen(false)}
+            className="lg:hidden p-2 text-gray-400 hover:text-gray-600"
+          >
+            <PanelLeftClose className="w-5 h-5" />
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-1">
+        <nav className="p-3 space-y-1">
           {navigation.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.name}
                 href={item.href}
+                title={item.name}
                 className={`
-                  flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all
+                  flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all
+                  ${!sidebarOpen ? 'justify-center' : ''}
                   ${isActive 
                     ? 'bg-gradient-to-r from-[#fef3e7] to-[#fde8d7] text-[#b8860b]' 
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }
                 `}
               >
-                <item.icon className={`w-5 h-5 ${isActive ? 'text-[#b8860b]' : ''}`} />
-                {item.name}
+                <item.icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-[#b8860b]' : ''}`} />
+                {sidebarOpen && <span>{item.name}</span>}
               </Link>
             );
           })}
         </nav>
 
         {/* Bottom section */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-100">
+        <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-gray-100">
           <Link
             href="/app/settings"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all"
+            title="Settings"
+            className={`
+              flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all
+              ${!sidebarOpen ? 'justify-center' : ''}
+            `}
           >
-            <Settings className="w-5 h-5" />
-            Settings
+            <Settings className="w-5 h-5 flex-shrink-0" />
+            {sidebarOpen && <span>Settings</span>}
           </Link>
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div className={`transition-all duration-200 ${sidebarOpen ? 'lg:pl-64' : 'lg:pl-20'}`}>
         {/* Header */}
         <header className="sticky top-0 z-30 h-16 bg-white/80 backdrop-blur-md border-b border-gray-100">
           <div className="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
             {/* Left side */}
             <div className="flex items-center gap-4">
               <button
-                onClick={() => setSidebarOpen(true)}
+                onClick={() => setMobileSidebarOpen(true)}
                 className="lg:hidden p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg"
               >
                 <Menu className="w-5 h-5" />
