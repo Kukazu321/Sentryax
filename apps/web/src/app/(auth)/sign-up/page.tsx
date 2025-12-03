@@ -42,6 +42,10 @@ export default function SignUpPage() {
       setError(error.message);
       setLoading(false);
     } else {
+      // Set flag to show confirmation page after verification
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('is_signup', 'true');
+      }
       setSuccess(true);
     }
   };

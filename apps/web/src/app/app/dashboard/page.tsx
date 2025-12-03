@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -53,8 +54,17 @@ const recentActivity = [
 export default function DashboardPage() {
   const [userName, setUserName] = useState('');
   const supabase = createClient();
+  const router = useRouter();
 
   useEffect(() => {
+    // Check for signup flag
+    const isSignup = localStorage.getItem('is_signup');
+    if (isSignup) {
+      localStorage.removeItem('is_signup');
+      router.push('/auth/confirmed');
+      return;
+    }
+
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
@@ -62,7 +72,7 @@ export default function DashboardPage() {
       }
     };
     getUser();
-  }, [supabase]);
+  }, [supabase, router]);
 
   return (
     <div className="space-y-8">
