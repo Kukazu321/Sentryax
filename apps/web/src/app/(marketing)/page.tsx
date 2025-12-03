@@ -13,9 +13,9 @@ export default function HomePage() {
     // Detect auth callback parameters and redirect to /auth/callback
     const code = searchParams.get('code');
     const token_hash = searchParams.get('token_hash');
-    const type = searchParams.get('type');
 
     if (code || token_hash) {
+      // eslint-disable-next-line no-console
       console.log('🔄 Auth params detected on home page, redirecting to /auth/callback');
       const params = new URLSearchParams(searchParams.toString());
       router.replace(`/auth/callback?${params.toString()}`);
