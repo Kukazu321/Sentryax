@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Hero } from '@/components/marketing/hero';
 import { TryItOut } from '@/components/marketing/try-it-out';
 
-export default function HomePage() {
+function AuthRedirect() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -22,8 +22,15 @@ export default function HomePage() {
     }
   }, [searchParams, router]);
 
+  return null;
+}
+
+export default function HomePage() {
   return (
     <main>
+      <Suspense fallback={null}>
+        <AuthRedirect />
+      </Suspense>
       <Hero />
       <TryItOut />
     </main>
