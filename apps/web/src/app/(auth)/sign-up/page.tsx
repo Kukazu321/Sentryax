@@ -104,10 +104,10 @@ export default function SignUpPage() {
                 <Image
                   src="/images/branding/logosentryaxfondblanc.png"
                   alt="Sentryax"
-                  width={56}
-                  height={56}
+                  width={64}
+                  height={64}
                   priority
-                  className="w-12 h-12 object-contain"
+                  className="w-16 h-16 object-contain"
                 />
               </Link>
             </div>
