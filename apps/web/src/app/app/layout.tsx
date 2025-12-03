@@ -75,17 +75,19 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
       `}>
         {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-100">
-          <Link href="/app/dashboard" className="flex items-center justify-center">
-            <Image
-              src="/images/branding/logosentryaxfondblanc.png"
-              alt="Sentryax"
-              width={44}
-              height={44}
-              className="w-11 h-11"
-              unoptimized
-            />
-          </Link>
+        <div className={`h-16 flex items-center border-b border-gray-100 ${sidebarOpen ? 'justify-between px-4' : 'justify-center'}`}>
+          {sidebarOpen && (
+            <Link href="/app/dashboard" className="flex items-center justify-center">
+              <Image
+                src="/images/branding/logosentryaxfondblanc.png"
+                alt="Sentryax"
+                width={44}
+                height={44}
+                className="w-11 h-11"
+                unoptimized
+              />
+            </Link>
+          )}
           {/* Toggle button - desktop */}
           <button 
             onClick={() => setSidebarOpen(!sidebarOpen)}
