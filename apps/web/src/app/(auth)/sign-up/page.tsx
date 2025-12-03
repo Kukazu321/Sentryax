@@ -94,20 +94,22 @@ export default function SignUpPage() {
             <div 
               className="relative flex items-center justify-center"
               style={{
-                width: '80px',
-                height: '80px',
+                width: '104px',
+                height: '104px',
                 border: '2px dashed rgba(0,0,0,0.1)',
-                borderRadius: '16px',
+                borderRadius: '24px',
               }}
             >
               <Link href="/" className="flex items-center justify-center">
                 <Image
                   src="/images/branding/logosentryaxfondblanc.png"
                   alt="Sentryax"
-                  width={64}
-                  height={64}
+                  width={88}
+                  height={88}
                   priority
-                  className="w-16 h-16 object-contain"
+                  unoptimized
+                  className="w-22 h-22 object-contain"
+                  style={{ width: '88px', height: '88px' }}
                 />
               </Link>
             </div>
